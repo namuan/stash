@@ -71,23 +71,26 @@ def main(args):
             return True
 
     for path in ns.paths:
-        if os.path.isfile(path):
+        if (os.path.isfile(path) or
+            os.path.islink(path)):
             if prompt(path):
                 try:
                     os.remove(path)
                     printp('%s has been deleted' % path)
-                except:
+                except Exception as e:
                     if not ns.force:
                         print('%s: unable to remove' % path)
+                        printp(e)
 
         elif os.path.isdir(path) and ns.recursive:
             if prompt(path):
                 try:
                     shutil.rmtree(path)
                     printp('%s has been deleted' % path)
-                except:
+                except Exception as e:
                     if not ns.force:
                         print('%s: unable to remove' % path)
+                        printp(e)
 
         elif os.path.isdir(path):
             print('%s: is a directory' % path)
